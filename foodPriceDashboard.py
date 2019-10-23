@@ -85,18 +85,35 @@ app.layout = html.Div(
                         html.Div(
                             className="card col s12",
                             children=[dcc.Graph(id='monthly-graph')],
-                        ),
+                            ),
+                        
                         html.Div(
                             className="card col s12",
                             children=[dcc.Graph(id='yoy-graph')],
-                        ),
-                    ]
-                ),
-            ],
-        ),
-        
-    ],
-)
+                            ),
+                        
+                        html.Div(#The summary section
+                            className="card col s12 grey-text", 
+                            children= [
+                                html.H5('Brief Summary of the selected item'),
+                                
+                                html.Div(#summary_month   
+                                    children=[dcc.Textarea(
+                                        id='summary-txt',
+                                        title='short summary of the selected item',
+                                        readOnly=True,
+                                        #rows="1000",
+                                        style={'height':'200px'},
+                                        )],
+                                    ),
+                                ],
+                            ),
+                        ]
+                    ),
+                ],
+            ),  
+        ],
+    )
 
 @app.callback(
     dash.dependencies.Output('monthly-graph', 'figure'),
@@ -203,8 +220,8 @@ def update_yoy_graph(selected_state,selected_food):
                 font=dict(
                     size=14,
                     color="#7f7f7f"
-                )
-            )
+                ),
+            ),
         ),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
@@ -212,7 +229,34 @@ def update_yoy_graph(selected_state,selected_food):
     )
     fig = {'data':traces, 'layout':layout}
     return go.Figure(fig)
+
+
+#-------------------------------------------------------------
+# Summary Text callback
+#-------------------------------------------------------------
+
+@app.callback(
+    dash.dependencies.Output('summary-txt', 'value'),
+    [dash.dependencies.Input('selected_state', 'value'),
+     dash.dependencies.Input('selected_food', 'value')],)
+def summary_txt(selected_state,selected_food):
+    summary_txt=''
+    for state_name in selected_state:
+        for food_name in selected_food:
+            graph_data = graph_line_data(state_name, food_name) # isolate the needed data
+            x=len(graph_data.columns)-1 #number of available months
+            y=[x-12*i for i in range(round(x/12))] #list of yoy months positions
+            yoy_data = [graph_data[graph_data.columns[y]] for x in y ][0].dropna(axis='columns') # lists of yoy data
+            yoy_list = yoy_data.values.tolist()[0] # picking up any of the list
+            direction= "increased"
+            cur_val= yoy_list[-1]
+            prev_val= 456
+            year1_price=yoy_list[-2]
+            year2_price=yoy_list[-3]
+            summary_txt = summary_txt + '\n\n' + f'''In {state_name} State, August 2019, the Average Price of {food_name} {direction} month on month to N{cur_val} from N{prev_val} in the previous month.\nBy this time last year the item was sold at N{year1_price} but was sold at N{year2_price} two years ago.'''
+    return summary_txt
     
         
 if __name__ == '__main__':
     app.run_server(debug=True)
+    
