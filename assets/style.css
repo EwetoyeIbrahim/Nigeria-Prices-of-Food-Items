@@ -55,3 +55,9 @@ p {
 footer.page-footer {
   margin: 0;
 }
+
+.container{
+  margin: auto;
+  width: 90%;
+  max-width: 1240px;
+}
