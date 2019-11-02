@@ -1,5 +1,12 @@
-from ._shared_res import public_helpers as public_helpers
+import sys
 import os
+# Getting the base directory ensures that my resources are mobile
+# especially in this development mode that I am yet to finalize the structure
+basedir=os.path.abspath(os.path.dirname(__file__))
+sys.path.append(basedir) #When shred resources is within the this folder
+sys.path.append(os.path.join(basedir,os.path.pardir))
+from _shared_res import public_helpers as public_helpers
+
 import textwrap
 #-----------------------------------------------------------
 import dash
@@ -11,10 +18,9 @@ import plotly.tools as tls
 #-----------------------------------------------------------
  
 external_stylesheets = ["https://fonts.googleapis.com/icon?family=Material+Icons","https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"]
-#external_scripts = ["https://code.jquery.com/jquery-2.1.1.min.js", "https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"]
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets,requests_pathname_prefix='/foodPriceDashboard/')
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
-basedir=os.path.abspath(os.path.dirname(__file__))
+
 states_food_data = pd.read_csv(os.path.join(basedir,'assets','Nigeria States Price of Food Items Jan2016_Aug2019.csv')) # Loading the merged prices
 #df.set_index([df.columns[0]],inplace=True)
 states_food_prices=states_food_data.copy()
@@ -25,7 +31,6 @@ state_list.extend(states_food_prices.States.unique())
 
 #----------------------------------------------------------------
 #setting the template variables
-#with open(os.getcwd() + '\\assets\\side_bar.html') as f:
 with open(os.path.join(basedir,'assets','side_bar.html')) as f:
     sidebar_content = f.read()
     
@@ -63,7 +68,7 @@ app.layout = html.Div(
                     className="row",
                     children=[
                         html.Div(#The state selector
-                            className="col-xs-12 col-md-4",
+                            className="col-xs-12 col-sm-4",
                             children= [
                                 dcc.Dropdown(
                                     id='selected_state',
@@ -74,7 +79,7 @@ app.layout = html.Div(
                             ],
                         ),
                         html.Div(#The food item selector
-                            className="col-xs-12 col-md-8",
+                            className="col-xs-12 col-sm-8",
                             children= [
                                 dcc.Dropdown(
                                     id='selected_food',
@@ -90,7 +95,7 @@ app.layout = html.Div(
                     className="row",
                     children = [
                         html.Div(
-                            className="col-xs-12 col-md-7",
+                            className="col-xs-12 col-sm-7",
                             children=[
                     
                                 html.Div(
@@ -105,7 +110,7 @@ app.layout = html.Div(
                                 ],
                             ),
                         html.Div(
-                            className="col-xs-12 col-md-5",
+                            className="col-xs-12 col-sm-5",
                             children=[
                                 html.Div(
                                     className="table",
@@ -172,7 +177,7 @@ def update_monthly_graph(selected_state,selected_food):
         title = {
             'text':title,
             'font':{
-                'size':14,
+                'size':12,
                 'color':"#7f7f7f",
             },
         },
@@ -192,7 +197,7 @@ def update_monthly_graph(selected_state,selected_food):
             title=go.layout.yaxis.Title(
                 text=" Price in Naira (NGN)",
                 font=dict(
-                    size=14,
+                    size=12,
                     color="#7f7f7f"
                 ),
             ),
@@ -246,7 +251,7 @@ def update_yoy_graph(selected_state,selected_food):
         title = {
             'text':title,
             'font':{
-                'size':14,
+                'size':12,
                 'color':"#7f7f7f",
             },
         },
@@ -255,7 +260,7 @@ def update_yoy_graph(selected_state,selected_food):
             title=go.layout.yaxis.Title(
                 text=" Percentage Growth relative to 2016",
                 font=dict(
-                    size=14,
+                    size=12,
                     color="#7f7f7f"
                 ),
                 
@@ -361,7 +366,7 @@ def update_table(selected_food,selected_month):
         title = {
             'text':title,
             'font':{
-                'size':14,
+                'size':12,
                 'color':"#7f7f7f",
             },
         },

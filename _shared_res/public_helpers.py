@@ -2,6 +2,7 @@
 It consist of universal functions such as:
 dashboard_template: for contructing the public dashboard template
 '''
+import os
 from functools import reduce
 
 def dashboard_template(page_title="DataVisuals",
@@ -18,7 +19,8 @@ def dashboard_template(page_title="DataVisuals",
     '''
     constructs the public dashboard base templates by substituting the passed parameter
     '''
-    with open(r'C:\Users\MEDSAF\Desktop\Apps\VirtualDataWeb\Dashboards\NigeriaFoodPrice\_shared_res\dashtemp.html','r') as f:
+    
+    with open(os.path.join(os.path.abspath(os.path.dirname(__file__)),'public_dashboard.html')) as f:
         template_html = f.read()
     template_vars = {"page_title": page_title,"page_subtitle":page_subtitle,
                      "author_name": author_name,
