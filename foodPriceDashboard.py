@@ -3,8 +3,8 @@ import os
 # Getting the base directory ensures that my resources are mobile
 # especially in this development mode that I am yet to finalize the structure
 basedir=os.path.abspath(os.path.dirname(__file__))
-sys.path.append(basedir) #When shred resources is within the this folder
-sys.path.append(os.path.join(basedir,os.path.pardir))
+#sys.path.append(basedir) #When shred resources is within this folder
+sys.path.append(os.path.join(basedir,os.path.pardir)) # when outside this folder
 from _shared_res import public_helpers as public_helpers
 
 import textwrap
@@ -19,15 +19,14 @@ import plotly.tools as tls
  
 external_stylesheets = ["https://fonts.googleapis.com/icon?family=Material+Icons","https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css"]
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app.scripts.config.serve_locally = True
 
-
-states_food_data = pd.read_csv(os.path.join(basedir,'assets','Nigeria States Price of Food Items Jan2016_Aug2019.csv')) # Loading the merged prices
+states_food_data = pd.read_csv(os.path.join(basedir,'assets','state_food_prices2016_2019.csv')) # Loading the merged prices
 #df.set_index([df.columns[0]],inplace=True)
 states_food_prices=states_food_data.copy()
 item_list = states_food_prices.ItemLabels.unique()
 data_months = list(states_food_prices.columns)[2:]
-state_list = ["NIGERIA (Monthly Average)"]
-state_list.extend(states_food_prices.States.unique())
+state_list = states_food_prices.States.unique()
 
 #----------------------------------------------------------------
 #setting the template variables
@@ -47,14 +46,9 @@ app.index_string = public_helpers.dashboard_template(page_title='Nigeria Food Pr
 #-----------------------------------------------------------------
 
 def graph_line_data(state_name, food_name):
-    if state_name != "NIGERIA (Monthly Average)":
-        state_data = states_food_prices[states_food_prices.States==state_name]
-        dat_y = state_data[state_data.ItemLabels==food_name]
-        dat_y= dat_y[dat_y.columns[2:]] #The figures part of the frame
-    else:
-        state_data = states_food_prices.groupby(['ItemLabels']).mean()
-        dat_y = state_data[state_data.index==food_name]
-    
+    state_data = states_food_prices[states_food_prices.States==state_name]
+    dat_y = state_data[state_data.ItemLabels==food_name]
+    dat_y= dat_y[dat_y.columns[2:]] #The figures part of the frame
     return(dat_y)
 
 app.layout = html.Div(
@@ -229,11 +223,14 @@ def update_yoy_graph(selected_state,selected_food):
             y=[x-12*i for i in range(round(x/12))] #list of yoy months positions
             yoy_data = [graph_data[graph_data.columns[y]] for x in y ][0].dropna(axis='columns') # lists of yoy data
             yoy_list = yoy_data.values.tolist()[0] # picking up any of the list
-            #computing the yoy growth rate list
-            yoy_rate = [((yoy_list[io]-yoy_list[io+1])/yoy_list[io])*100 for io in range(len(yoy_list)-1)]
+            #print(yoy_list)#computing the yoy growth rate list
+            #yoy_rate = [((yoy_list[io]-yoy_list[io+1])/yoy_list[io])*100 for io in range(len(yoy_list)-1)]
+            # Some figures are strings
+            yoy_rate = [((float(yoy_list[io])-float(yoy_list[io+1]))/float(yoy_list[io]))*100 for io in range(len(yoy_list)-1)]
+            #print(yoy_rate)
             yoy_rate.append(0) # fixing the last reference value of 0
             yoy_rate.reverse() # reverse the data to cater for chronology
-            #print(yoy_rate)
+            
             #print(yoy_data.columns[::-1])
             #print(yoy_data.columns[::-1])
             traces.append(
@@ -348,7 +345,7 @@ def update_table(selected_food,selected_month):
     value_header = ['State']
     #state_list = ["NIGERIA (Monthly Average)"]
     #value_cell = [df['Name'], df['Team'], df['Position']]
-    value_cell = [state_list[1:]] # Eliminating the first option: NIGERIA (Monthly Average)
+    value_cell = [state_list] # Eliminating the first option: NIGERIA (Monthly Average)
     for col in selected_food:
         value_header.append(col)
         #select rows with the food_name,reduce to the month columns
