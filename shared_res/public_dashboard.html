@@ -1,0 +1,101 @@
+<!Doctype html>
+<html lang='en'>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+    
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="meta_tag">
+    <meta name="author" content="author_name">
+    <link rel="icon" href="favicon_path.ico">
+
+    <title>page_title</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'
+        integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh'
+        crossorigin='anonymous'>
+    <!-- Google font icons-->
+    <link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>
+    <!-- Custom CSS for Jupyter Notebooks Markdowns -->
+    <!--link rel='stylesheet' href='../static/custom-css/colorful.css'-->
+    <!-- Custom styles for this template -->
+    {%css%}
+    <!-- Custom CSS for equimolar blog-->
+    <style>
+        a {
+            color:darkkhaki;
+            text-decoration: green;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        
+        <nav class='navbar fixed-top navbar-expand-sm navbar-light bg-dark'>
+            <a class='navbar-brand' href='/'><strong style="color: white; font-size: 28px">
+                Equimolar</strong>
+            </a>
+            <button class='navbar-toggler' type='button' data-toggle='collapse'
+                data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent'
+                aria-expanded='false' aria-label='Toggle navigation'>
+                <span class='navbar-toggler-icon'></span>
+            </button>
+          
+            <div class='collapse navbar-collapse justify-content-end' id='navbarSupportedContent'>
+                <form class='form-inline pr-1' action="{{ url_for('equimolar_blog.search') }}" method="POST">
+                    <div class='input-group'>
+                        <input type='text' class='form-control' placeholder='Search Equimolar'
+                        name= "search" aria-label='Search' aria-describedby='basic-addon1'>
+                        <div class='input-group-prepend'>
+                            <button class='input-group-text' type='submit' id='basic-addon1'>
+                                <i class='material-icons'>search</i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                <ul class='navbar-nav bg-secondary bg-light'>
+                    <li class='nav-item'>
+                        <a class='nav-link' href='#'>About Me</a>
+                    </li>
+                </ul>
+              
+            </div>
+        </nav>
+        
+        <div class='container-fluid bg-secondary bg-light'>
+            <div class='row pt-4 mt-2'>
+                <div class='container col-lg-9 mt-5 pt-4'>
+                    <h1>page_title</h1>
+                    <h3><small>page_subtitle</small></h3>
+                    <hr>
+                    {%app_entry%}
+                </div>
+                <span class='border-left'></span>
+                <nav class='col-lg-2 bg-secondary bg-light' aria-label='Secondary navigation'>
+                    <div class='pt-5'>
+                        <hr>
+                        <img class='mx-auto d-block img-fluid'
+                            alt='advert banner' src=''>
+                        <hr>
+                        <button><a href="/tag/dashboards-apps">Other Dashboards</a></button>
+                    </div>
+                    sidebar_content
+                </nav>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap Documentation JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src='https://code.jquery.com/jquery-3.4.1.slim.min.js' integrity='sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n' crossorigin='anonymous'></script>
+    <script src='https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js' integrity='sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo' crossorigin='anonymous'></script>
+    <script src='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js' integrity='sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6' crossorigin='anonymous'></script>
+
+    {%config%}
+    {%scripts%}
+    {%renderer%}
+
+</body>
+</html>
+
