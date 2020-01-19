@@ -16,11 +16,11 @@ basedir=os.path.abspath(os.path.dirname(__file__))
 # External stylesheets should be used when not using app_index
 #external_stylesheets = ['https://fonts.googleapis.com/icon?family=Material+Icons',
 #                        'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css']
-app = dash.Dash(__name__,)# external_stylesheets=external_stylesheets,)
+app = dash.Dash(__name__,# external_stylesheets=external_stylesheets,)
                 # Use request requests_pathname_prefix when in stand-alone
                 # otherwise either comment-out or use url_base_pathname
-                #requests_pathname_prefix = f'''/{os.path.basename(os.path.dirname(__file__))}/''',)
-#app.scripts.config.serve_locally = True
+                requests_pathname_prefix = f'''/{os.path.basename(os.path.dirname(__file__))}/''',)
+app.scripts.config.serve_locally = True
 
 # Loading the merged prices
 states_food_data = pd.read_csv(os.path.join(basedir,'assets','state_food_prices2016_2019.csv'))
