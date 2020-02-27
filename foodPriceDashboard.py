@@ -1,4 +1,3 @@
-import sys
 import os
 
 import dash
@@ -6,7 +5,6 @@ import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 import plotly.graph_objs as go
-import plotly.tools as tls
 import textwrap
 
 from shared_res import public_helpers as public_helpers
@@ -35,16 +33,14 @@ state_list = states_food_prices.States.unique()
 with open(os.path.join(basedir,'assets','side_bar.html')) as f:
     sidebar_content = f.read()
 
-app.index_string = public_helpers.dashboard_template(page_title='Nigeria Food Price Trend',
-                         page_subtitle='<strong class="green">Visualizing Food Historical Prices</strong>',
-                         meta_tag='Nigeria Food Price Trend',
-                         header_img_path='./assets/market9.jpg',
-                         header_img_alt='Nigeria Food Prices',
-                         links_to_related_files = '',
-                         generated_advert='',
-                         sidebar_content= sidebar_content,
-                         list_of_recent_visuals='',
-                         )
+app.index_string = public_helpers.dashboard_template(
+                        page_title='Nigeria Food Price Trend',
+                        page_subtitle='Visualizing historical prices of food in Nigeria',
+                        meta_tag='Nigeria Food Price Trend',
+                        og_image_link='https://www.equimolar.com' + app.get_asset_url('food_trend_graph.png'),
+                        sidebar_content=sidebar_content,
+                        dashboard_external_url='https://www.equimolar.com'+f'''/{os.path.basename(os.path.dirname(__file__))}'''
+                        )
 
 #-----------------------------------------------------------------
 
@@ -93,12 +89,12 @@ app.layout = html.Div(
                         html.Div(
                             className="col-12 col-md-7",
                             children=[
-                    
+
                                 html.Div(
                                     className="col-12",
                                     children=[dcc.Graph(id='monthly-graph')],
                                     ),
-                                
+
                                 html.Div(
                                     className="col-12",
                                     children=[dcc.Graph(id='yoy-graph')],
@@ -125,9 +121,9 @@ app.layout = html.Div(
                                         ),]
                                 ),],
                             ),
-                        
+
                         html.Div(#The summary section
-                            className="col-12", 
+                            className="col-12",
                             style={"paddingTop":"20px"},
                             children= [
                                 dcc.Markdown(id='summary-txt'),
@@ -177,7 +173,7 @@ def update_monthly_graph(selected_state,selected_food):
                 'color':"#7f7f7f",
             },
         },
-            
+
         legend={
             'orientation':'h',
             'traceorder': 'reversed',
@@ -210,7 +206,7 @@ def update_monthly_graph(selected_state,selected_food):
      dash.dependencies.Input('selected_food', 'value')])
 def update_yoy_graph(selected_state,selected_food):
     traces =[]
-    title = "Year on Year Growth Rate"   
+    title = "Year on Year Growth Rate"
 
     for state_name in selected_state:
         for food_name in selected_food:
@@ -248,7 +244,7 @@ def update_yoy_graph(selected_state,selected_food):
                 font=dict(
                     size=14,
                     color="#7f7f7f"
-                ),  
+                ),
             ),
         ),
         margin=go.layout.Margin(
@@ -256,7 +252,7 @@ def update_yoy_graph(selected_state,selected_food):
         ),
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)',
-        
+
     )
     fig = {'data':traces, 'layout':layout}
     return go.Figure(fig)
@@ -301,17 +297,17 @@ def summary_txt(selected_state,selected_food):
             year1_price=f'{float(yoy_list[-2]):.2f}'
             year2_price=f'{float(yoy_list[-3]):.2f}'
             summary_txt_ = textwrap.dedent(f'''
-                                    **In {state_name}, {month_year}:**  
-                                    The Average Price of {food_name} {direction} month on month 
-                                    to N{cur_val} from N{prev_val} in the previous month. 
-                                    By this time last year, the {food_name} was sold at 
+                                    **In {state_name}, {month_year}:**
+                                    The Average Price of {food_name} {direction} month on month
+                                    to N{cur_val} from N{prev_val} in the previous month.
+                                    By this time last year, the {food_name} was sold at
                                     N{year1_price} but was sold at N{year2_price} two years ago.
-                                    
+
                                     ''')
-            summary_txt = summary_txt + summary_txt_       
+            summary_txt = summary_txt + summary_txt_
     return summary_txt
 
-    
+
     #The Table
 @app.callback(
     dash.dependencies.Output("output-table", "figure"),
@@ -349,7 +345,6 @@ def update_table(selected_food,selected_month):
             l=5, r=5, b=3, t=50, pad=0, ),
         )
     return {"data": [trace], "layout": layout}
-        
+
 if __name__ == '__main__':
     app.run_server(port=8080, debug=True)
-    
