@@ -10,14 +10,16 @@ import textwrap
 from shared_res import public_helpers as public_helpers
 #-----------------------------------------------------------
 
-basedir=os.path.abspath(os.path.dirname(__file__))
+folder_name = os.path.dirname(__file__)
+point_path = f'''/{os.path.basename(folder_name)}/'''
+basedir=os.path.abspath(folder_name)
 # External stylesheets should be used when not using app_index
 #external_stylesheets = ['https://fonts.googleapis.com/icon?family=Material+Icons',
 #                        'https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css']
 app = dash.Dash(__name__,# external_stylesheets=external_stylesheets,)
                 # Use request requests_pathname_prefix when in stand-alone
                 # otherwise either comment-out or use url_base_pathname
-                requests_pathname_prefix = f'''/{os.path.basename(os.path.dirname(__file__))}/''',)
+                requests_pathname_prefix = point_path,)
 app.scripts.config.serve_locally = True
 
 # Loading the merged prices
@@ -39,7 +41,7 @@ app.index_string = public_helpers.dashboard_template(
                         meta_tag='Nigeria Food Price Trend',
                         og_image_link='https://www.equimolar.com' + app.get_asset_url('food_trend_graph.png'),
                         sidebar_content=sidebar_content,
-                        dashboard_external_url='https://www.equimolar.com'+f'''/{os.path.basename(os.path.dirname(__file__))}'''
+                        dashboard_external_url='https://www.equimolar.com'+point_path
                         )
 
 #-----------------------------------------------------------------
