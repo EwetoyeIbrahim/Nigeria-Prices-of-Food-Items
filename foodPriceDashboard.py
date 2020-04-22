@@ -11,7 +11,7 @@ from shared_res import public_helpers as public_helpers
 #-----------------------------------------------------------
 
 folder_name = os.path.dirname(__file__)
-point_path = f'''/{os.path.basename(folder_name)}/'''
+point_path = f'''/{os.path.basename(folder_name).lower()}/'''
 basedir=os.path.abspath(folder_name)
 # External stylesheets should be used when not using app_index
 #external_stylesheets = ['https://fonts.googleapis.com/icon?family=Material+Icons',
