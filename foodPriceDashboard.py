@@ -20,10 +20,10 @@ app = dash.Dash(__name__,# external_stylesheets=external_stylesheets,)
                 # Use request requests_pathname_prefix when in stand-alone
                 # otherwise either comment-out or use url_base_pathname
                 requests_pathname_prefix = point_path,)
-app.scripts.config.serve_locally = True
+app.scripts.config.serve_locally = False
 
 # Loading the merged prices
-states_food_data = pd.read_csv(os.path.join(basedir,'assets','state_food_prices2016_2019.csv'))
+states_food_data = pd.read_csv(os.path.join(basedir,'assets','state_food_prices2016_2020.csv'))
 #df.set_index([df.columns[0]],inplace=True)
 states_food_prices=states_food_data.copy()
 item_list = states_food_prices.ItemLabels.unique()
@@ -36,9 +36,9 @@ with open(os.path.join(basedir,'assets','side_bar.html')) as f:
     sidebar_content = f.read()
 
 app.index_string = public_helpers.dashboard_template(
-                        page_title='Nigeria Food Price Trend',
+                        page_title="Nigeria's Food Price Trend",
                         page_subtitle='Visualizing historical prices of food in Nigeria',
-                        meta_tag='Nigeria Food Price Trend',
+                        meta_tag="Nigeria's Food Price Trend",
                         og_image_link='https://www.equimolar.com' + app.get_asset_url('food_trend_graph.png'),
                         sidebar_content=sidebar_content,
                         dashboard_external_url='https://www.equimolar.com'+point_path
